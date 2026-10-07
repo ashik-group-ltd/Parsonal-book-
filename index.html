@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050505">
+<title>ASHIK JAMAN — THE STORY</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+    --gold: #d7b65d;
+    --gold-light: #f4dfa0;
+    --white: #f7f4ed;
+    --muted: #aaa7a0;
+    --black: #050505;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #050505;
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ================= BACKGROUND ================= */
+
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: -5;
+    background: radial-gradient(circle at 50% 40%, #1a1710 0%, #0a0908 45%, #020202 100%);
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.16;
+    animation: float 14s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+.orb.one {
+    width: 420px;
+    height: 420px;
+    background: #d7b65d;
+    top: -180px;
+    left: -140px;
+}
+
+.orb.two {
+    width: 360px;
+    height: 360px;
+    background: #8b6528;
+    right: -160px;
+    bottom: -140px;
+    animation-delay: 3s;
+}
+
+.orb.three {
+    width: 280px;
+    height: 280px;
+    background: #ffffff;
+    left: 40%;
+    top: 50%;
+    opacity: 0.02;
+    animation-delay: 6s;
+}
+
+@keyframes float {
+    from { transform: translate3d(-25px, -15px, 0) scale(1); }
+    to   { transform: translate3d(35px, 30px, 0) scale(1.12); }
+}
+
+/* Grain */
+.grain {
+    position: fixed;
+    inset: -50%;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 0.3s steps(2) infinite;
+}
+
+@keyframes grain {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(1.5%, -1.5%); }
+    50%  { transform: translate(-1.5%, 1.5%); }
+    75%  { transform: translate(1.5%, 1.5%); }
+    100% { transform: translate(-1.5%, -1.5%); }
+}
+
+/* Vignette */
+.vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.6) 100%);
+}
+
+/* ================= TOP BAR ================= */
+
+.top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 78px;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.brand {
+    font-size: 11px;
+    letter-spacing: 5.5px;
+    color: var(--gold-light);
+    font-weight: 500;
+}
+
+.chapter {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #777;
+}
+
+.chapter span {
+    color: var(--gold);
+}
+
+/* ================= PROGRESS ================= */
+
+.progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 20%;
+    background: linear-gradient(90deg, var(--gold), #fff, var(--gold));
+    z-index: 80;
+    transition: width 0.85s cubic-bezier(0.77, 0, 0.18, 1);
+    box-shadow: 0 0 12px rgba(215, 182, 93, 0.4);
+}
+
+/* ================= SLIDER ================= */
+
+.viewport {
+    width: 100vw;
+    height: 100dvh;
+    overflow: hidden;
+    perspective: 1600px;
+}
+
+.slider {
+    display: flex;
+    height: 100%;
+    width: 500vw;
+    transition: transform 0.95s cubic-bezier(0.77, 0, 0.18, 1);
+    will-change: transform;
+}
+
+.page {
+    width: 100vw;
+    height: 100dvh;
+    flex: 0 0 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 95px 7vw 120px;
+    position: relative;
+}
+
+/* Book Frame */
+.page::before {
+    content: "";
+    position: absolute;
+    inset: 26px;
+    border: 1px solid rgba(215, 182, 93, 0.08);
+    pointer-events: none;
+    border-radius: 3px;
+}
+
+/* ================= CARD (Book Page Style) ================= */
+
+.card {
+    width: min(900px, 100%);
+    max-height: calc(100dvh - 190px);
+    overflow-y: auto;
+    padding: 50px 48px;
+    border-radius: 6px; /* sharper like a book page */
+    background: 
+        linear-gradient(145deg, rgba(255,255,255,0.065), rgba(255,255,255,0.015)),
+        #0c0b09;
+    border: 1px solid rgba(215, 182, 93, 0.12);
+    box-shadow: 
+        0 30px 100px rgba(0,0,0,0.65),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    animation: cardIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    position: relative;
+}
+
+/* Subtle book page lines */
+.card::after {
+    content: "";
+    position: absolute;
+    top: 18px;
+    bottom: 18px;
+    left: 18px;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(215,182,93,0.15), transparent);
+    pointer-events: none;
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.97);
+        filter: blur(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+.card::-webkit-scrollbar {
+    width: 3px;
+}
+.card::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 10px;
+}
+
+/* ================= HERO ================= */
+
+.hero {
+    text-align: center;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    overflow: visible;
+    padding: 10px !important;
+}
+
+.hero::after {
+    display: none !important;
+}
+
+/* ===== HIGHLIGHTED EST. 2005 ===== */
+.hero-small {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 8px;
+    color: var(--gold);
+    margin-bottom: 36px;
+    padding: 8px 22px;
+    border: 1px solid rgba(215, 182, 93, 0.45);
+    border-radius: 40px;
+    background: rgba(215, 182, 93, 0.08);
+    box-shadow: 
+        0 0 25px rgba(215, 182, 93, 0.15),
+        inset 0 0 12px rgba(215, 182, 93, 0.05);
+    animation: letterIn 1.5s both;
+    position: relative;
+}
+
+.hero-small::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 40px;
+    border: 1px solid rgba(215, 182, 93, 0.15);
+    pointer-events: none;
+}
+
+@keyframes letterIn {
+    from { 
+        opacity: 0; 
+        letter-spacing: 18px;
+        transform: scale(0.9);
+    }
+    to { 
+        opacity: 1; 
+        letter-spacing: 8px;
+        transform: scale(1);
+    }
+}
+
+.hero h1 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(72px, 12.5vw, 158px);
+    line-height: 0.74;
+    font-weight: 500;
+    letter-spacing: -4px;
+    background: linear-gradient(125deg, #fff 15%, var(--gold-light) 50%, #fff 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: titleReveal 1.4s cubic-bezier(0.77, 0, 0.18, 1) both;
+}
+
+@keyframes titleReveal {
+    from {
+        opacity: 0;
+        transform: translateY(55px);
+        clip-path: inset(100% 0 0 0);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+.hero-line {
+    width: 90px;
+    height: 1px;
+    margin: 40px auto 20px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.hero-sub {
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: #888;
+}
+
+/* ================= TEXT STYLES ================= */
+
+.number {
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: 5px;
+    margin-bottom: 14px;
+    font-weight: 500;
+}
+
+h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 500;
+    font-size: clamp(44px, 6.2vw, 72px);
+    line-height: 0.9;
+    margin-bottom: 12px;
+}
+
+.subtitle {
+    color: var(--gold-light);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 10px;
+    margin-bottom: 32px;
+    font-weight: 500;
+}
+
+.text p {
+    color: #c8c5be;
+    font-size: 14.5px;
+    line-height: 1.9;
+    margin-bottom: 16px;
+}
+
+.quote {
+    position: relative;
+    margin: 30px 0;
+    padding: 24px 26px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 25px;
+    line-height: 1.3;
+    color: var(--gold-light);
+    border-top: 1px solid rgba(215, 182, 93, 0.25);
+    border-bottom: 1px solid rgba(215, 182, 93, 0.12);
+}
+
+.quote::before {
+    content: "“";
+    position: absolute;
+    left: -10px;
+    top: -20px;
+    font-size: 72px;
+    color: rgba(215, 182, 93, 0.13);
+    font-family: "Cormorant Garamond", serif;
+}
+
+/* ================= SPECIAL CARDS ================= */
+
+.love {
+    background: 
+        radial-gradient(circle at 85% 15%, rgba(180, 70, 100, 0.07), transparent 40%),
+        linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.01));
+}
+
+.love h2 {
+    background: linear-gradient(120deg, #fff, #e8b8c8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.agl-mark {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--gold);
+    letter-spacing: 2.5px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 22px;
+    box-shadow: 0 0 35px rgba(215, 182, 93, 0.12), inset 0 0 15px rgba(215, 182, 93, 0.04);
+}
+
+.goal {
+    display: grid;
+    grid-template-columns: 125px 1fr;
+    gap: 16px;
+    align-items: center;
+    margin-top: 16px;
+    padding: 16px 18px;
+    border: 1px solid rgba(215, 182, 93, 0.13);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.02);
+}
+
+.goal-label {
+    color: var(--gold);
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+}
+
+.goal-value {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 22px;
+    line-height: 1.3;
+}
+
+.future {
+    background: 
+        radial-gradient(circle at 18% 12%, rgba(130, 100, 190, 0.06), transparent 40%),
+        linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.01));
+}
+
+.future h2 {
+    background: linear-gradient(120deg, #fff, #d4b8f0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.promise {
+    margin-top: 26px;
+    padding: 26px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.02);
+}
+
+.promise-title {
+    font-family: "Cormorant Garamond", serif;
+    color: var(--gold);
+    font-size: 26px;
+    margin-bottom: 14px;
+}
+
+/* ================= NAVIGATION ================= */
+
+.nav {
+    position: fixed;
+    bottom: 32px;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.btn {
+    height: 48px;
+    padding: 0 28px;
+    border-radius: 50px;
+    color: #ddd;
+    background: rgba(12, 11, 9, 0.8);
+    border: 1px solid rgba(215, 182, 93, 0.35);
+    backdrop-filter: blur(16px);
+    font-size: 10px;
+    letter-spacing: 3.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.35s ease;
+}
+
+.btn:hover:not(:disabled) {
+    background: var(--gold);
+    color: #050505;
+    border-color: var(--gold);
+    box-shadow: 0 10px 35px rgba(215, 182, 93, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+}
+
+/* Special Next Button */
+#next {
+    background: linear-gradient(135deg, rgba(215,182,93,0.15), rgba(215,182,93,0.05));
+    border-color: rgba(215, 182, 93, 0.5);
+    color: var(--gold-light);
+}
+
+#next:hover:not(:disabled) {
+    background: var(--gold);
+    color: #050505;
+}
+
+.page-count {
+    min-width: 70px;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #777;
+}
+
+.page-count strong {
+    color: var(--gold-light);
+}
+
+/* Side Dots */
+.side-nav {
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #555;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dot:hover {
+    background: #888;
+}
+
+.dot.active {
+    height: 26px;
+    border-radius: 5px;
+    background: var(--gold);
+    box-shadow: 0 0 12px rgba(215, 182, 93, 0.4);
+}
+
+/* Swipe Hint */
+.swipe {
+    position: fixed;
+    bottom: 95px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    color: #666;
+    font-size: 8px;
+    letter-spacing: 4px;
+    transition: opacity 0.5s;
+    animation: pulse 2.8s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.85; }
+}
+
+/* Transition Overlay */
+.transition {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    background: linear-gradient(90deg, #050505 0%, var(--gold) 48%, #050505 100%);
+    transform: translateX(-110%);
+}
+
+.transition.go {
+    animation: transitionSlide 0.85s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+@keyframes transitionSlide {
+    0%   { transform: translateX(-110%); }
+    45%  { transform: translateX(0); }
+    100% { transform: translateX(110%); }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 700px) {
+    .top {
+        height: 64px;
+        padding: 0 20px;
+    }
+    .brand { font-size: 8px; letter-spacing: 3.5px; }
+    .chapter { font-size: 8px; letter-spacing: 2.5px; }
+
+    .page {
+        padding: 78px 16px 110px;
+    }
+    .page::before { inset: 14px; }
+
+    .card {
+        padding: 28px 22px;
+        max-height: calc(100dvh - 155px);
+        border-radius: 4px;
+    }
+
+    .card::after {
+        left: 12px;
+        top: 12px;
+        bottom: 12px;
+    }
+
+    .hero-small {
+        font-size: 10px;
+        letter-spacing: 5px;
+        padding: 7px 16px;
+        margin-bottom: 28px;
+    }
+
+    .hero h1 {
+        font-size: 66px;
+        letter-spacing: -2.5px;
+    }
+
+    h2 { font-size: 44px; }
+
+    .text p {
+        font-size: 13.5px;
+        line-height: 1.85;
+    }
+
+    .quote {
+        font-size: 21px;
+        padding: 18px 16px;
+    }
+
+    .goal {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .side-nav { right: 12px; }
+
+    .btn {
+        padding: 0 18px;
+        font-size: 9px;
+        height: 46px;
+    }
+
+    .page-count { min-width: 54px; }
+}
+</style>
+</head>
+<body>
+
+<div class="background">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+</div>
+
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<div class="progress" id="progress"></div>
+
+<header class="top">
+    <div class="brand">ASHIK JAMAN</div>
+    <div class="chapter">CHAPTER <span id="chapter">01</span></div>
+</header>
+
+<div class="transition" id="transition"></div>
+
+<main class="viewport" id="viewport">
+<div class="slider" id="slider">
+
+    <!-- PAGE 1 - HERO -->
+    <section class="page">
+        <div class="card hero">
+            <div class="hero-small">EST. 2005</div>
+            <h1>Ashik<br>Jaman</h1>
+            <div class="hero-line"></div>
+            <div class="hero-sub">MY LIFE • MY JOURNEY • MY STORY</div>
+        </div>
+    </section>
+
+    <!-- PAGE 2 - ABOUT -->
+    <section class="page">
+        <div class="card">
+            <div class="number">02 — ABOUT ME</div>
+            <h2>About Me</h2>
+            <div class="subtitle">The Beginning of My Journey</div>
+            <div class="text">
+                <p>Meri kahani shuru se aasaan nahi thi. Zindagi ne mujhe bahut chhoti umar mein hi kuch aise faisle lene par majboor kiya, jinke baare mein shayad us umar mein koi sochta bhi nahi.</p>
+                <p>Jab main lagbhag 16 saal ka tha, tab main Class 9 mein padh raha tha. Ghar ki financial situation theek nahi thi aur mujhe zaroori support nahi mil pa raha tha.</p>
+                <p>Isliye mujhe apni padhai chhodni padi.</p>
+                <p>Aur sirf 16 saal ki umar mein, main apna ghar chhodkar bahar kaam karne aur apni zindagi khud sambhalne ke liye nikal pada.</p>
+                <p>Us waqt mujhe nahi pata tha ki aage kya hoga. Na koi perfect plan tha, na koi bada backup. Bas ek soch thi —</p>
+                <div class="quote">"Mujhe kuch karna hai. Mujhe apni zindagi badalni hai."</div>
+                <p>Jis umar mein doosre bachche school ja rahe the, us umar mein main kaam, paisa, responsibility aur zindagi ki reality samajhna shuru kar raha tha.</p>
+                <p>Raasta aasaan nahi tha. Bahut saari mushkilein aayi. Kabhi confidence gira, kabhi thakan hui, kabhi laga ki sab kuch ruk gaya hai.</p>
+                <p>Lekin main rukna nahi chahta tha.</p>
+                <p>Har mushkil ne mujhe kuch na kuch sikhaya. Maine seekha ki paisa kitni mehnat se milta hai, independence kya hoti hai, aur apne future ke liye khud khade hona kitna zaroori hai.</p>
+                <p>Mere paas shuru mein koi perfect roadmap nahi tha. Bas ek destination tha — ek behtar zindagi.</p>
+                <p>Aur yeh website meri usi journey ki kahani hai. Yeh sirf meri past ki story nahi hai. Yeh us insaan ki kahani hai jo abhi bhi apni zindagi bana raha hai.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 3 - LOVE STORY -->
+    <section class="page">
+        <div class="card love">
+            <div class="number">03 — MY LOVE STORY</div>
+            <h2>My Love Story</h2>
+            <div class="subtitle">A Story That Started in Class 9</div>
+            <div class="text">
+                <p>Jab main Class 9 mein tha, tab meri zindagi mein ek ladki aayi — Unknown.</p>
+                <p>Us waqt mujhe nahi pata tha ki ek simple si feeling meri zindagi ka itna bada hissa ban jayegi.</p>
+                <p>Mujhe Unknown pasand thi. Dheere-dheere woh pasand love mein badal gayi.</p>
+                <p>Lekin meri kahani ek one-sided love story thi.</p>
+                <p>Main lagbhag 3 saal tak usse dil se chahta raha. Maine kabhi us feeling ko fake nahi kiya. Jo tha, sach tha.</p>
+                <p>Lekin har love story ka ending relationship nahi hota.</p>
+                <p>Ek waqt ke baad mujhe samajh aaya ki kisi ko pyaar karna aur kisi ko apni zindagi mein paana — dono alag cheezein hain.</p>
+                <p>Maine dheere-dheere usse love karna chhod diya. Move on karna aasaan nahi tha, lekin maine apni feelings ko accept kiya aur apni zindagi par focus karna shuru kiya.</p>
+                <p>Aaj Unknown meri just friend hai.</p>
+                <p>Aur sabse important baat — Aaj mere dil mein uske liye koi romantic feeling nahi hai.</p>
+                <p>Jo tha, woh meri zindagi ka ek khoobsurat chapter tha. Main us chapter ko erase nahi karna chahta.</p>
+                <p>Kyunki usne mujhe kuch cheezein sikhayi — feelings ko samajhna, acceptance, letting go, aur sabse important...</p>
+                <p>Kabhi-kabhi kisi ko dil se chahna bhi zaroori nahi ki usse apna banana ho.</p>
+                <p>Kuch log hamari life mein relationship banne ke liye nahi, ek yaad aur ek chapter banne ke liye aate hain.</p>
+                <div class="quote">Chapter Closed.<br>Friendship Remains.<br>Life Moves Forward. ❤️</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 4 - AGL -->
+    <section class="page">
+        <div class="card">
+            <div class="agl-mark">AGL</div>
+            <div class="number">04 — AGL VISION</div>
+            <h2>AGL Vision</h2>
+            <div class="subtitle">Building Something Bigger</div>
+            <div class="text">
+                <p>AGL — Ashik Group Limited</p>
+                <p>AGL mere liye sirf ek company ka naam nahi hai. Yeh ek vision hai.</p>
+                <p>Ek aisa vision jo meri life ke experiences se nikla hai — struggles se, failures se, learning se aur future ke dreams se.</p>
+                <p>
